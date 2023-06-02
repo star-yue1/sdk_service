@@ -1,6 +1,8 @@
 /* sdk.controller.ts */
 // 引入 Nest.js 内置的各个功能
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, Res } from '@nestjs/common';
+import { Response } from 'express';
+import { BatchCreateSdkDto } from './sdk.dto';
 // import { Cron, CronExpression } from '@nestjs/schedule';
 // 引入用户服务
 import { SdkService } from './sdk.service';
@@ -27,7 +29,7 @@ export class SdkController {
         return this.sdkService.updataSdkStatus(query);
     }
     @Get('batchCreateSdk')
-    async batchCreateSdk(@Query() query: any) {
-        return this.sdkService.batchCreateSdk(query);
+    async batchCreateSdk(@Query('count') count: string, @Query('time') time: string, @Res() res: Response) {
+        return this.sdkService.batchCreateSdk({ count, time }, res);
     }
 }

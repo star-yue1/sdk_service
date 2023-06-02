@@ -5,6 +5,9 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { sdk, SdkDocument } from 'src/schema/sdk.schema';
 // import { CreateUserDto } from './sdk.dto.ts';
 import { Injectable } from '@nestjs/common';
+const fs = require("fs");
+const moment = require('moment');
+
 const maxSdkLingth = 32;
 @Injectable()
 export class SdkService {
@@ -60,14 +63,35 @@ export class SdkService {
     return temp;
   }
   // 批量生成SDK
-  async batchCreateSdk(query) {
-    const { count } = query;
-    const sdkList = await new Array(count).fill(null).map(async () => {
+  async batchCreateSdk(query, res) {
+    try {    
+    const { count, time } = query;
+    console.log(count, new Array(Number(count)));
+    
+    const sdkList = await new Array(Number(count)).fill(null).map(async () => {
       return await this.createSdk(query)
     })
-
-    console.log('sdkList11', sdkList);
+    const list = await Promise.all(sdkList);
+    console.log('list', list)
+    const formattedDate = `${moment().format('YYYY-MM-DD')}_${new Date().getTime()}`;
+    console.log(formattedDate);
+    const filePath = `/${formattedDate}.txt`
+    fs.writeFile(filePath, list.map(item => item.sdk).join("\n"), "utf8", (err) => {
+      if (err) throw err;
+  
+      console.log("文件内容修改成功");
+    });
     
+    const fileStream = fs.createReadStream(filePath);
+    console.log('fileStream', fileStream);
+    
+    res.setHeader('Content-Disposition', 'attachment; filename=' + formattedDate);
+    res.setHeader('Content-Type', 'application/octet-stream');
+    fileStream.pipe(res); //将 txt 发送给客户端
+    // res.download(file); //将 txt 发送给客户端
+  } catch(e) {
+    return { code: 500, msg: e}
+  }
   }
 
   async createSdk(query) {
