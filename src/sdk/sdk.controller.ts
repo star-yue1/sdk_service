@@ -1,6 +1,15 @@
 /* sdk.controller.ts */
 // 引入 Nest.js 内置的各个功能
-import { Body, Controller, Delete, Get, Param, Post, Query, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  Res,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { BatchCreateSdkDto } from './sdk.dto';
 // import { Cron, CronExpression } from '@nestjs/schedule';
@@ -11,25 +20,29 @@ import { SdkService } from './sdk.service';
 // 配置局部路由
 @Controller('/api/sdk')
 export class SdkController {
-    constructor(private readonly sdkService: SdkService) { }
-    //  创建sdk
-    @Get('createSdk')
-    async createUser(@Query() query: any) {
-        return this.sdkService.create(query);
-    }
+  constructor(private readonly sdkService: SdkService) {}
+  //  创建sdk
+  @Get('createSdk')
+  async createUser(@Query() query: any) {
+    return this.sdkService.create(query);
+  }
 
-    // 获取SDK列表
-    @Get('getSdklist')
-    async getSdkList(@Query() query: any) {
-        return this.sdkService.getSdkList(query);
-    }
-    // 更新SDK状态
-    @Get('updataStatus')
-    async updataStatus(@Query() query: any) {
-        return this.sdkService.updataSdkStatus(query);
-    }
-    @Get('batchCreateSdk')
-    async batchCreateSdk(@Query('count') count: string, @Query('time') time: string, @Res() res: Response) {
-        return this.sdkService.batchCreateSdk({ count, time }, res);
-    }
+  // 获取SDK列表
+  @Get('getSdklist')
+  async getSdkList(@Query() query: any) {
+    return this.sdkService.getSdkList(query);
+  }
+  // 更新SDK状态
+  @Get('updataStatus')
+  async updataStatus(@Query() query: any) {
+    return this.sdkService.updataSdkStatus(query);
+  }
+  @Get('batchCreateSdk')
+  async batchCreateSdk(
+    @Query('count') count: string,
+    @Query('time') time: string,
+    @Res() res: Response,
+  ) {
+    return this.sdkService.batchCreateSdk({ count, time }, res);
+  }
 }

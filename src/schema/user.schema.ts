@@ -4,9 +4,9 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 // SchemaFactory 是 mongoose 内置的一个方法做用是读取模式文档 并创建 Schema 对象
 import { Document } from 'mongoose';
 import { sdk } from './sdk.schema';
-export type UserDocument = user & Document;
+export type UserDocument = User & Document;
 @Schema()
-export class user extends Document {
+export class User extends Document {
   // 设置值为必填
   // 卡密
   @Prop({ required: true })
@@ -28,6 +28,6 @@ export class user extends Document {
   end_time: string;
   // sdk详情
   @Prop()
-  sdk_info: sdk
+  sdk_info: sdk;
 }
-export const UserSchema = SchemaFactory.createForClass(user);
+export const UserSchema = SchemaFactory.createForClass(User);

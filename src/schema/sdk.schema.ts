@@ -6,7 +6,6 @@ import { Document } from 'mongoose';
 export type SdkDocument = sdk & Document;
 @Schema()
 export class sdk extends Document {
-
   // 设置值为必填
   // 卡密
   @Prop({ required: true })
@@ -29,7 +28,6 @@ export class sdk extends Document {
   // 操作人
   @Prop()
   op_name: string;
-
 
   // 设置值为必填
   // 卡密
